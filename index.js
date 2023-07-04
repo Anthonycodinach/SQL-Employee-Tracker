@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const db = require("./utils/dataInputFunctions");
 
+// Different variables cointaining all question sets 
 const questions = [
     {
         type: "list", name: "selectAction", message: "What would you like to do?", choices: [
@@ -71,15 +72,27 @@ const addNewEmployee = [
 
 const updateEmployeeRole = [
     {
-        type: "input", name: "departmentName", message: "Which employee's role do you want to update?", choices: [
-            "John Doe",
-            "Mike Chan",
-            "Ashley Rodriguez",
-            "Kevin Tupik",
-            "Betty Martinez",
-            "Malia Brown",
-            "Tom Allen",
-            "Scott Cawthon"
+        type: "input", name: "firstName", message: "First name of the employee's role you want to update?", choices: [
+            "John",
+            "Mike",
+            "Ashley",
+            "Kevin",
+            "Betty",
+            "Malia",
+            "Tom",
+            "Scott"
+        ]
+    },
+    {
+        type: "input", name: "lastName", message: "Last name of the employee's role you want to update?", choices: [
+            "Doe",
+            "Chan",
+            "Rodriguez",
+            "Tupik",
+            "Martinez",
+            "Brown",
+            "Allen",
+            "Cawthon"
         ]
     },
     {
@@ -96,43 +109,55 @@ const updateEmployeeRole = [
     },
 ];
 
-function menu () {
+function menu() {
     // run menu question with all possible choices
     inquirer.prompt(questions).then((response) => {
         console.log(response);
         // Write switch case based on user anser to run sub function
+        // Write different functions for each menu option of questions
         switch (response.selectAction) {
             case "View All Employees":
                 db.viewEmployeesQuery();
+                menu();
                 break;
             case "Add Employee":
                 inquirer.prompt(addNewEmployee).then((response) => {
-                console.log(response)})
+                    db.addEmployee(response);
+                    console.log("1 record inserted into the company database")
+                })
+                menu();
                 break;
             case "Update Employee Role":
                 inquirer.prompt(updateEmployeeRole).then((response) => {
-                    console.log(response)})
+                    console.log(response)
+                })
+                menu();
                 break;
             case "View All Roles":
                 db.viewAllRolesQuery();
+                menu();
                 break;
             case "Add Role":
                 inquirer.prompt(addNewRole).then((response) => {
-                    console.log(response)})
+                    console.log(response)
+                })
+                menu();
                 break;
             case "View All Departments":
                 db.viewAllDepartmentsQuery()
+                menu();
                 break;
             case "Add Department":
                 inquirer.prompt(addNewDepartment).then((response) => {
-                    console.log(response)})
+                    console.log(response)
+                });
+                menu();
                 break;
             case "Quit":
-                statements
+                menu();
             default:
                 console.log("No selection was made")
         }
-        // Write different functions for each menu option of questions
     })
 }
 
