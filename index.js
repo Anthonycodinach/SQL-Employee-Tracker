@@ -117,41 +117,52 @@ function menu() {
         // Write different functions for each menu option of questions
         switch (response.selectAction) {
             case "View All Employees":
-                db.viewEmployeesQuery();
-                menu();
+                db.viewEmployeesQuery().then(data => {
+                    console.table(data[0])
+                    menu();
+                });
                 break;
             case "Add Employee":
                 inquirer.prompt(addNewEmployee).then((response) => {
                     db.addEmployee(response);
-                    console.log("1 record inserted into the company database")
+                    menu();
                 })
-                menu();
                 break;
             case "Update Employee Role":
                 inquirer.prompt(updateEmployeeRole).then((response) => {
-                    console.log(response)
-                })
-                menu();
+                    db.updateEmployeeRole(response).then(data => {
+                        console.log("Existing employee role updated in database");
+                        menu();
+                    });
+                });
                 break;
             case "View All Roles":
-                db.viewAllRolesQuery();
-                menu();
+                db.viewAllRolesQuery().then(data => {
+                    console.table(data[0])
+                    menu();
+                });
                 break;
             case "Add Role":
                 inquirer.prompt(addNewRole).then((response) => {
-                    console.log(response)
-                })
-                menu();
+                    db.addRole(response).then(data => {
+                        console.log("New role added to database")
+                        menu();
+                    });
+                });
                 break;
             case "View All Departments":
-                db.viewAllDepartmentsQuery()
-                menu();
+                db.viewAllDepartmentsQuery().then(data => {
+                    console.table(data[0])
+                    menu();
+                });
                 break;
             case "Add Department":
                 inquirer.prompt(addNewDepartment).then((response) => {
-                    console.log(response)
+                    db.addDepartment(response).then(data => {
+                        console.log("New department added to database");
+                        menu();
+                    });
                 });
-                menu();
                 break;
             case "Quit":
                 menu();

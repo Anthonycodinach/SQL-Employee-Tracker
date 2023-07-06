@@ -1,78 +1,42 @@
 
 // Set up class constructor to export methods
+const { title } = require("process");
 const connections = require("../db/connection")
+const menu = require("../index")
 
 class DB {
     constructor(connection) {
         this.connection = connection
     }
     viewEmployeesQuery() {
-        try {
-            this.connection.promise().query("SELECT * FROM employee").then(results => {
-                console.table(results[0]);
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        return this.connection.promise().query("SELECT * FROM employee");
     }
     viewAllRolesQuery() {
-        try {
-            this.connection.promise().query("SELECT * FROM role").then(results => {
-                console.table(results[0])
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        return this.connection.promise().query("SELECT * FROM role");
     }
     viewAllDepartmentsQuery() {
-        try {
-            this.connection.promise().query("SELECT * FROM department").then(results => {
-                console.table(results[0])
-            });
-        } catch (error) {
-            console.log(error);
-        }
+      return this.connection.promise().query("SELECT * FROM department");
     }
     addEmployee(data) {
-        // let addEmployeeSql = `INSERT INTO employee (first_name, last_name) VALUES (${data.employeeFirstName},${data.employeeLasttName})`
         try {
-            this.connection.promise().query(`INSERT INTO employee (first_name, last_name) VALUES (${data.employeeFirstName}, ${data.employeeLastName})`).then(results => {
-                this.viewEmployeesQuery(results)
+           this.connection.promise().query(`SELECT id FROM role WHERE title = '${data.employeeRole}'`).then(results => {
+            this.connection.promise().query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ('${data.employeeFirstName}', '${data.employeeLastName}', ${results[0][0].id})`).then(results => {
+                console.log("New employee added to database")
             });
+           });
         } catch (error) {
             console.log(error);
         }
     }
     addDepartment(data) {
-        // let addEmployeeSql = `INSERT INTO employee (first_name, last_name) VALUES (${data.employeeFirstName},${data.employeeLasttName})`
-        try {
-            this.connection.promise().query(`INSERT INTO department (name) VALUES (${data.departmentName})`).then(results => {
-                this.viewAllDepartmentsQuery(results)
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        return this.connection.promise().query(`INSERT INTO department (name) VALUES ('${data.departmentName}')`)
     }
     addRole(data) {
-        // let addEmployeeSql = `INSERT INTO employee (first_name, last_name) VALUES (${data.employeeFirstName},${data.employeeLasttName})`
-        try {
-            this.connection.promise().query(`INSERT INTO role (title, salary)
-            VALUES (${data.roleName}, ${data.roleSalary})`).then(results => {
-                this.viewAllrolesQuery(results)
-            });
-        } catch (error) {
-            console.log(error);
-        }
+       return this.connection.promise().query(`INSERT INTO role (title, salary)
+        VALUES ('${data.roleName}', ${data.roleSalary})`);
     }
-    updateEmployeerole(data) {
-        // let addEmployeeSql = `INSERT INTO employee (first_name, last_name) VALUES (${data.employeeFirstName},${data.employeeLasttName})`
-        try {
-            this.connection.promise().query(`UPDATE employees SET department = ${data.departmentName} WHERE first_name = ${data.firstName}, last_name = ${data.lastname}`).then(results => {
-                this.viewEmployeesQuery(results)
-            });
-        } catch (error) {
-            console.log(error);
-        }
+    updateEmployeeRole(data) {
+        return this.connection.promise().query(`UPDATE employee SET department_id = '${data.departmentId}' WHERE first_name = '${data.firstName}', last_name = '${data.lastName}'`)
 }};
 
 module.exports = new DB(connections);
