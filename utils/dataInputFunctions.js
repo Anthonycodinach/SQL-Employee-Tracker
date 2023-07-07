@@ -17,16 +17,8 @@ class DB {
     viewAllDepartmentsQuery() {
       return this.connection.promise().query("SELECT * FROM department");
     }
-    addEmployee(data) {
-        try {
-           this.connection.promise().query(`SELECT id FROM role WHERE title = '${data.employeeRole}'`).then(results => {
-            this.connection.promise().query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ('${data.employeeFirstName}', '${data.employeeLastName}', ${results[0][0].id})`).then(results => {
-                console.log("New employee added to database")
-            });
-           });
-        } catch (error) {
-            console.log(error);
-        }
+    addEmployee(roleId, firstName, lastName) {
+        return this.connection.promise().query(`INSERT INTO employee (first_name, last_name, role_id) VALUES ('${firstName}', '${lastName}', ${roleId})`)
     }
     addDepartment(data) {
         return this.connection.promise().query(`INSERT INTO department (name) VALUES ('${data.departmentName}')`)
@@ -35,9 +27,12 @@ class DB {
        return this.connection.promise().query(`INSERT INTO role (title, salary)
         VALUES ('${data.roleName}', ${data.roleSalary})`);
     }
-    updateEmployeeRole(data) {
-        return this.connection.promise().query(`UPDATE employee SET department_id = '${data.departmentId}' WHERE first_name = '${data.firstName}', last_name = '${data.lastName}'`)
-}};
-
+    updateEmployeeRole(roleId, firstName, lastName) {
+        return this.connection.promise().query(`UPDATE employee SET role_id = ${roleId} WHERE first_name = '${firstName}' AND last_name = '${lastName}'`)
+    }
+    findRoleByName(roleName) {  
+        return this.connection.promise().query(`SELECT id FROM role WHERE title = '${roleName}'`);
+    }
+}
 module.exports = new DB(connections);
 

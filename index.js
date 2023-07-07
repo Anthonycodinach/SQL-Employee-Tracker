@@ -41,8 +41,8 @@ const addNewRole = [
 ];
 
 const addNewEmployee = [
-    { type: "input", name: "employeeFirstName", message: "What is the employee's first name?" },
-    { type: "input", name: "employeeLastName", message: "What is the employee's last name?" },
+    { type: "input", name: "firstName", message: "What is the employee's first name?" },
+    { type: "input", name: "lastName", message: "What is the employee's last name?" },
     {
         type: "list", name: "employeeRole", message: "Which department does the role belong to?", choices: [
             "Sales Lead",
@@ -124,16 +124,22 @@ function menu() {
                 break;
             case "Add Employee":
                 inquirer.prompt(addNewEmployee).then((response) => {
-                    db.addEmployee(response);
-                    menu();
+                    db.findRoleByName(response.employeeRole).then(data => {
+                        db.addEmployee(data[0][0].id, response.firstName, response.lastName).then(() => {
+                            console.log("New employee added to database");
+                            menu();
+                        })
+                    })
                 })
                 break;
             case "Update Employee Role":
                 inquirer.prompt(updateEmployeeRole).then((response) => {
-                    db.updateEmployeeRole(response).then(data => {
-                        console.log("Existing employee role updated in database");
-                        menu();
-                    });
+                    db.findRoleByName(response.employeeRole).then(data => {
+                        db.updateEmployeeRole(data[0][0].id, response.firstName, response.lastName).then(() => {
+                            console.log("Existing employee role updated in database");
+                            menu();
+                        })
+                    })
                 });
                 break;
             case "View All Roles":
