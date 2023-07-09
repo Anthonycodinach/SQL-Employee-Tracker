@@ -27,7 +27,7 @@ const addNewRole = [
     {
         type: "input",
         name: "roleSalary",
-        message: "Please enter the annual slary for the role "
+        message: "Please enter the annual salary for the role"
     },
     {
         type: "list", name: "newRoleDepartment", message: "Which department does the role belong to?", choices: [

@@ -25,14 +25,16 @@ class DB {
         return this.connection.promise().query(`INSERT INTO department (name) VALUES ('${data.departmentName}')`)
     }
     addRole(data) {
-       return this.connection.promise().query(`INSERT INTO role (title, salary)
-        VALUES ('${data.roleName}', ${data.roleSalary})`);
+       return this.connection.promise().query(`INSERT INTO role (title, salary) VALUES ('${data.roleName}', ${data.roleSalary})`);
     }
     updateEmployeeRole(roleId, firstName, lastName) {
         return this.connection.promise().query(`UPDATE employee SET role_id = ${roleId} WHERE first_name = '${firstName}' AND last_name = '${lastName}'`)
     }
     findRoleByName(roleName) {  
         return this.connection.promise().query(`SELECT id FROM role WHERE title = '${roleName}'`);
+    }
+    findDepartmentByName(departmentName) {  
+        return this.connection.promise().query(`SELECT id FROM role WHERE title = '${departmentName}'`);
     }
 }
 module.exports = new DB(connections);
