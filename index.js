@@ -65,7 +65,8 @@ const addNewEmployee = [
             "Betty Martinez",
             "Malia Brown",
             "Tom Allen",
-            "Scott Cawthon"
+            "Scott Cawthon",
+            "N/A"
         ]
     }
 ];
@@ -150,11 +151,13 @@ function menu() {
                 break;
             case "Add Role":
                 inquirer.prompt(addNewRole).then((response) => {
-                    db.addRole(response).then(data => {
+                    db.findDepartmentByName(response.newRoleDepartment).then(data => {
+                    db.addRole(response.roleName, response.roleSalary, data[0][0].id).then(data => {
                         console.log("New role added to database")
                         menu();
                     });
                 });
+            });
                 break;
             case "View All Departments":
                 db.viewAllDepartmentsQuery().then(data => {

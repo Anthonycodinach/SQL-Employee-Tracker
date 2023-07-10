@@ -24,8 +24,8 @@ class DB {
     addDepartment(data) {
         return this.connection.promise().query(`INSERT INTO department (name) VALUES ('${data.departmentName}')`)
     }
-    addRole(data) {
-       return this.connection.promise().query(`INSERT INTO role (title, salary) VALUES ('${data.roleName}', ${data.roleSalary})`);
+    addRole(name, salary, departmentId) {
+       return this.connection.promise().query(`INSERT INTO role (title, salary, department_id) VALUES ('${name}', ${salary}, ${departmentId})`);
     }
     updateEmployeeRole(roleId, firstName, lastName) {
         return this.connection.promise().query(`UPDATE employee SET role_id = ${roleId} WHERE first_name = '${firstName}' AND last_name = '${lastName}'`)
@@ -34,7 +34,7 @@ class DB {
         return this.connection.promise().query(`SELECT id FROM role WHERE title = '${roleName}'`);
     }
     findDepartmentByName(departmentName) {  
-        return this.connection.promise().query(`SELECT id FROM role WHERE title = '${departmentName}'`);
+        return this.connection.promise().query(`SELECT id FROM department WHERE name = '${departmentName}'`);
     }
 }
 module.exports = new DB(connections);
